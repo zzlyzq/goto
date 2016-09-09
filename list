@@ -1,0 +1,4 @@
+# format 
+ipaddress password sshport sshuser sshprompt description
+1.1.1.1 password 22 user # 测试条目
+
