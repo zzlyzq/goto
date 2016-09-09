@@ -1,0 +1,53 @@
+#!/usr/bin/expect -f 
+
+log_file /tmp/1.txt
+
+# This is very important.
+set HOST [lindex $argv 0]
+set serverpassword [lindex $argv 1]
+set port [lindex $argv 2]
+set user [lindex $argv 3]
+set prompt [lindex $argv 4]
+set timeout 10
+
+#send_user "$serverpassword"
+#exit
+
+# connect via ssh
+spawn ssh -o StrictHostKeyChecking=no $user@$HOST -p $port
+
+#######################
+expect {
+	print "进入第一个expect"
+    -re "yes/no.*" {
+        exp_send "yes\r"
+        exp_continue
+    }
+
+    -re "password:.*" {
+        exp_send "$serverpassword"
+        exp_send "\r"
+    }
+}
+
+expect {
+    -re "password:.*" {
+        exp_send "$serverpassword"
+        exp_send "\r"
+    }
+    -re "$prompt.*" {
+        interact
+	exit
+    }
+    -re "password:.*" {
+        exp_send "$serverpassword"
+        exp_send "\r"
+    }
+}
+
+expect {
+    -re "$prompt.*" {
+	interact
+	exit
+    }
+}
