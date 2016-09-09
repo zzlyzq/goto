@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+#coding: utf8
+
+import os,sys,re
+import subprocess
+import datetime
+
+host = sys.argv[1]
+
+if host == "list":
+    print "进入"
+    for line in open("./list"):
+        result = re.findall("(\S+)",line)
+	#print len(result)
+        if len(result) >=5:
+	    print "%s %s"%(result[0],result[5])
+    sys.exit()
+
+matchedline = []
+for line in open("/Users/jacky/bin/list"):
+    result = re.findall(host,line)
+    if len(result) == 1:
+        matchedline.append(line)
+
+if len(matchedline) == 1:
+    secretline=matchedline[0]
+    print "Found the machted line."
+    value = re.findall("\S+",secretline)
+    if len(value) >= 5:
+        print "... Mached Line Found!!!"
+    #    print value
+    else:
+        print "Please check your config file list."
+        exit(1)
+    #print value
+    host = value[0]
+    passwd = value[1]
+    port = value[2]
+    user = value[3]
+    prompt = value[4]
+    if len(value) >= 6:
+        description = value[5]
+    #print host
+    #print passwd
+    #print port
+    #print user
+    print "Welcome Login --> %s"%(description)
+    #os.system("/Users/jacky/bin/denglu2 %s \'%s\' %s %s \"%s\""%(host, passwd,port,user,prompt))
+    os.system("/Users/jacky/bin/denglu2 %s \'%s\' %s %s \"%s\""%(host, passwd,port,user,prompt))
+else:
+    print "No Not Find Matched. Exit............."
